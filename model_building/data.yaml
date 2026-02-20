@@ -1,0 +1,7 @@
+path: /content/dataset/RDD2022_WORKING
+train: train/images
+val: val/images
+test: test/images
+
+nc: 1
+names: ['road_anomaly']
