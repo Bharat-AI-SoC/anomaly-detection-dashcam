@@ -300,7 +300,7 @@ Once you have a trained `best.pt`, export it:
 
 ```bash
 # Standard ONNX export
-python export.py --weights runs/train/exp/weights/best.pt --include onnx --img 320
+python export.py --weights runs/train/exp/weights/best.pt --include onnx --img 416
 
 # Export to several formats at once
 python export.py --weights best.pt --include onnx torchscript tflite
@@ -371,7 +371,7 @@ Results go to `runs/detect/exp/`.
 
 ```bash
 # With the quantized model
-python val.py --weights best_int8.onnx --data data.yaml --img 320
+python val.py --weights best_int8.onnx --data data.yaml --img 416
 
 # With the full PyTorch checkpoint
 python val.py --weights runs/train/exp/weights/best.pt --data data.yaml --img 416
@@ -408,7 +408,7 @@ Press **q** to quit the live view.
 You can also use the general-purpose detection script if you prefer:
 
 ```bash
-python detect.py --weights best_int8.onnx --source 0 --img 320 --device cpu --view-img
+python detect.py --weights best_int8.onnx --source 0 --img 416 --device cpu --view-img
 ```
 
 ---
@@ -462,11 +462,11 @@ We intentionally collapsed everything into one class. The goal here is anomaly a
 | Setup | Resolution | Raw Inference | End-to-End | Frames/sec |
 |---|---|---|---|---|
 | ONNX FP32 | 416x416 | ~800 ms | ~900 ms | ~1.1 |
-| ONNX FP32 | 320x320 | ~250 ms | ~300 ms | ~3.3 |
-| **ONNX INT8** | **320x320** | **~120 ms** | **~180 ms** | **~5.5** |
-| ONNX INT8 with frame skipping | 320x320 | ~120 ms | ~180 ms | 10+ effective |
+| ONNX FP32 | 416x416 | ~250 ms | ~300 ms | ~3.3 |
+| **ONNX INT8** | **416x416** | **~120 ms** | **~180 ms** | **~5.5** |
+| ONNX INT8 with frame skipping | 416x416 | ~120 ms | ~180 ms | 10+ effective |
 
-**Where the time goes (INT8, 320x320 input):**
+**Where the time goes (INT8, 416x416 input):**
 
 - Pre-processing (resize, normalise, transpose): 30–50 ms
 - Neural network inference: 120–200 ms
@@ -487,7 +487,7 @@ At around 5–6 FPS, the system picks up potholes and obstacles comfortably at c
 | Backbone freezing | Fine-tuning | Prevents the pretrained features from being overwritten when data is limited |
 | Automatic anchor tuning | Before training | Fits anchor boxes to the specific shapes of potholes and road damage |
 | Exponential moving average (EMA) | Training | Produces smoother, more stable final weights |
-| Lower inference resolution | Deployment | 320x320 instead of 416x416 cuts computation by ~4x |
+| Lower inference resolution | Deployment | 416x416 instead of 416x416 cuts computation by ~4x |
 | Multi-threaded ONNX Runtime | Deployment | Spreads work across all four Cortex-A72 cores |
 | ONNX graph optimisation | Deployment | Fuses operations and folds constants for fewer total computations |
 
